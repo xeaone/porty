@@ -1,0 +1,19 @@
+{
+  "name": "porty",
+  "version": "1.0.0",
+  "description": "Porty quickly and easily find available ports.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderElias/porty.git"
+  },
+  "author": "Alexander Elias",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/AlexanderElias/porty/issues"
+  },
+  "homepage": "https://github.com/AlexanderElias/porty#readme"
+}
