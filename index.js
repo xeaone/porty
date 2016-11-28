@@ -12,8 +12,7 @@ const MIN = 8000;
 function getAvailablePort (port, ports) {
 	var portExists = true;
 
-	if (ports) ports.sort(sortNumber);
-	else return port;
+	ports.sort(sortNumber);
 
 	while (portExists === true){
 		portExists = exists(port, ports);
@@ -56,7 +55,7 @@ function attempt (portMin, portMax, portsAvoid, callback) {
 		server.close(function () {
 			if (portMin > portMax) return callback();
 			port++;
-			attempt(port, portMax, callback, portsAvoid);
+			attempt(port, portMax, portsAvoid, callback);
 		});
 	});
 
@@ -71,21 +70,18 @@ function attempt (portMin, portMax, portsAvoid, callback) {
 	all params are optional
 */
 exports.get = function (portMin, portMax, portsAvoid, callback) {
+
 	if (typeof portMin === 'function') {
-		callback = portMin; portMax = MAX; portMin = MIN; portsAvoid = null;
-	} // Function
-	else if (typeof portMax === 'function' && typeof portMin === 'number') {
-		callback = portMax; portMax = MAX; portsAvoid = null;
-	} // Number, Function
-	else if (typeof portMax === 'function' && typeof portMin === 'object') {
-		callback = portMax; portsAvoid = portMin; portMin = MIN; portMax = MAX;
-	} // Array, Function
-	else if (typeof portMax === 'object') {
-		callback = portsAvoid; portsAvoid = portMax; portMax = MAX;
-	} // Number, Array, Function
-	else if (typeof portsAvoid === 'function') {
-		callback = portsAvoid; portsAvoid = null;
-	} // Number, Number, Function
+		callback = portMin;
+		portMin = MIN;
+		portMax = MAX;
+	} else if (typeof portMax === 'function') {
+		callback = portMax;
+		portMax = MAX;
+	} else if (typeof portsAvoid === 'function') {
+		callback = portsAvoid;
+		portsAvoid = null;
+	}
 
 	attempt(portMin, portMax, portsAvoid, function (port) {
 		return callback(port);

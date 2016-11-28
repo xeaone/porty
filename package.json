@@ -1,6 +1,6 @@
 {
   "name": "porty",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Porty quickly and easily find available ports.",
   "main": "index.js",
   "scripts": {
