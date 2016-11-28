@@ -12,7 +12,8 @@ const MIN = 8000;
 function getAvailablePort (port, ports) {
 	var portExists = true;
 
-	ports.sort(sortNumber);
+	if (ports) ports.sort(sortNumber);
+	else return port;
 
 	while (portExists === true){
 		portExists = exists(port, ports);
