@@ -1,89 +1,65 @@
 const Net = require('net');
+const Porty = {};
 
-const HOST = '0.0.0.0';
-const MAX = 20000;
-const MIN = 8000;
+Porty.HOST = '0.0.0.0';
+Porty.MAX = 100000;
+Porty.MIN = 8000;
 
-/*
-	getAvailablePort accepts a single number port and ports array
-	if the port is exists in the ports then one is added to ports and tested
-	else if the port or the new port does not exists in the ports it returns false
-*/
-function getAvailablePort (port, ports) {
-	var portExists = true;
+// test for open port
+Porty.test = function (port) {
+	const self = this;
 
-	ports.sort(sortNumber);
+	return new Promise(function (resolve) {
+		const server = Net.createServer();
 
-	while (portExists === true){
-		portExists = exists(port, ports);
-		if (portExists) port++;
-	}
+		server.unref();
 
-	return port;
-
-	function sortNumber(a, b) {
-		return a - b;
-	}
-
-	function exists (item, items) {
-		var l = items.length;
-		var f = l - 1;
-		var i = 0;
-
-		var itemFirst = items[0];
-		var itemFinal = items[f];
-
-		if (item < itemFirst) return false;
-		if (item > itemFinal) return false;
-
-		for (i; i < l; i++) {
-			if (items[i] === item) return true;
-			else if (i === f) return false;
-		}
-	}
-}
-
-function attempt (portMin, portMax, portsAvoid, callback) {
-	const server = Net.createServer();
-
-	var port = (portsAvoid) ? getAvailablePort(portMin, portsAvoid) : portMin;
-
-	server.unref();
-	server.listen(port, HOST);
-
-	server.once('error', function() {
-		server.close(function () {
-			if (portMin > portMax) return callback();
-			port++;
-			attempt(port, portMax, portsAvoid, callback);
+		server.once('error', function () {
+			server.close(function () {
+				return resolve(false);
+			});
 		});
-	});
 
-	server.once('listening', function() {
-		server.close(function () {
-			return callback(port);
+		server.once('listening', function () {
+			server.close(function () {
+				return resolve(true);
+			});
 		});
-	});
-}
 
-/*
-	all params are optional
-*/
-exports.get = function (portMin, portMax, portsAvoid, callback) {
-
-	if (typeof portMin === 'function') {
-		callback = portMin;
-		portMin = MIN;
-		portMax = MAX;
-	} else if (typeof portMax === 'function') {
-		callback = portMax;
-		portMax = MAX;
-	} else if (typeof portsAvoid === 'function') {
-		callback = portsAvoid;
-		portsAvoid = null;
-	}
-
-	attempt(portMin, portMax, portsAvoid, function (port) {
-		return callback(port);
+		server.listen(port, self.HOST);
 	});
 };
+
+// find open port
+Porty.find = function (options) {
+	const self = this;
+
+	options = options || {};
+
+	if (!options.avoids) options.avoids = [];
+	if (!options.min) options.min = self.MIN;
+	if (!options.max) options.max = self.MAX;
+	if (!options.port) options.port = options.min;
+
+	if (options.min > options.max) {
+		return Promise.reject(new Error('port min is greater than port max'));
+	} else if (options.avoids.indexOf(options.port) !== -1) {
+		options.port++;
+		return self.find(options);
+	} else {
+		return self.test(options.port).then(function (available) {
+			if (available) {
+				return Promise.resolve(options.port);
+			} else {
+				options.port++;
+				return self.find(options);
+			}
+		}).catch(function (error) {
+			return Promise.reject(error);
+		});
+	}
+};
+
+Porty.get = Porty.find;
+
+module.exports = Porty;

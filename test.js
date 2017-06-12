@@ -1,13 +1,17 @@
 const Porty = require('./index.js');
 
-var portMin = 8080;
-var portMax = 8090;
-var portsToAvoid = [8100, 8002, 8003, 8007, 8005];
-
-Porty.get(portMin, portMax, portsToAvoid, function (port) {
-	console.log(port);
+Porty.find({
+	min: 8080,
+	max: 8090,
+	avoids: [8080, 8081, 8082, 8083, 8084]
+}).then(function (port) {
+	console.log(`1st: ${port}`);
+}).catch(function (error) {
+	throw error;
 });
 
-Porty.get(function (port) {
-	console.log(port);
+Porty.get().then(function (port) {
+	console.log(`2nd: ${port}`);
+}).catch(function (error) {
+	throw error;
 });
