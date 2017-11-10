@@ -1,26 +1,32 @@
 const Porty = require('./index.js');
 
-Porty.find({
-	min: 8080,
-	max: 8090,
-	avoids: [8081, 8080, 8082, 8083, 8084]
-}).then(function (port) {
-	console.log(`1st: ${port}`);
-}).catch(function (error) {
-	console.log(error);
-});
+(async function() {
+	try {
 
-Porty.get().then(function (port) {
-	console.log(`2nd: ${port}`);
-}).catch(function (error) {
-	console.log(error);
-});
+		const p1 = await Porty.find({
+			min: 8080,
+			max: 8090,
+			avoids: [8081, 8080, 8082, 8083, 8084]
+		});
+		console.log(`1st: ${p1}`);
 
-Porty.find({
-	min: 8002,
-	max: 8001
-}).then(function (port) {
-	console.log(`3rd: ${port}`);
-}).catch(function (error) {
-	console.log(error);
-});
+		const p2 = await Porty.get();
+		console.log(`2nd: ${p2}`);
+
+		try {
+			const p3 = await Porty.find({
+				min: 8002,
+				max: 8001
+			});
+			console.log(`3rd: oops something wrong`);
+		} catch (e) {
+			console.log(`3rd: correctly errored`);
+		}
+
+		const p4 = await Porty.test(8000);
+		console.log(`4th: ${p4}`);
+
+	} catch (e) {
+		console.error(e);
+	}
+}());

@@ -1,8 +1,11 @@
 {
   "name": "porty",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Porty quickly and easily find available ports.",
   "main": "index.js",
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "scripts": {
     "test": "test.js"
   },
@@ -15,5 +18,15 @@
   "bugs": {
     "url": "https://github.com/AlexanderElias/porty/issues"
   },
-  "homepage": "https://github.com/AlexanderElias/porty#readme"
+  "homepage": "https://github.com/AlexanderElias/porty#readme",
+  "keywords": [
+    "port",
+    "finder",
+    "tester",
+    "find",
+    "test",
+	"porty",
+    "ports",
+	"available"
+  ]
 }
