@@ -21,13 +21,15 @@ console.log(port); // 8085
 Tests if a port is in use. Returns a boolean.
 - `port: Number` port to test
 
-## Porty.find(options)
-Options are optional. Returns a open port.
+## Porty.find([options,] [min, max])
+Arguments can be a single object or one/two number arguments. All arguments are optional. Return value is a open port number `>= min <= max`.
 
 - `options: Object`
-	- `min: Number` port number to start
-	- `max: Number` port number to end
+	- `min: Number` port number to start (default: 8,000)
+	- `max: Number` port number to end (default: 10,000)
 	- `avoids: Array` array of port numbers to avoid
+- `min: Number`
+- `max: Number`
 
 ## Porty.get
 Alias for Porty.find

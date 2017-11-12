@@ -26,6 +26,9 @@ const Porty = require('./index.js');
 		const p4 = await Porty.test(8000);
 		console.log(`4th: ${p4}`);
 
+		const p5 = await Porty.find(9000);
+		console.log(`5th: ${p5}`);
+
 	} catch (e) {
 		console.error(e);
 	}
